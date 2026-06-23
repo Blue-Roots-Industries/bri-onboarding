@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRI New Employee Onboarding | Blue Roots Industries</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Calibri','Segoe UI',Arial,sans-serif;background:#F0F2F5;min-height:100vh}
+
+/* HEADER */
+.header{background:#024977;padding:18px 32px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.2)}
+.header img{height:44px;flex-shrink:0}
+.header-text h1{color:#fff;font-size:20px;font-weight:700;margin:0}
+.header-text p{color:rgba(255,255,255,0.65);font-size:12px;margin:2px 0 0}
+.header-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.score-chip{background:rgba(255,255,255,0.15);color:#fff;padding:5px 14px;border-radius:20px;font-size:13px;font-weight:700}
+.lang-select{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.35);border-radius:6px;padding:4px 8px;font-size:12px;font-family:inherit;font-weight:600;cursor:pointer}
+.lang-select option{color:#024977;background:#fff}
+
+/* PROGRESS */
+.progress-wrap{background:#013a5e;height:8px}
+.progress-fill{background:#C19A6B;height:8px;transition:width 0.6s ease;min-width:0}
+
+/* CHAPTER NAV */
+.chapter-nav{background:#fff;display:flex;gap:0;border-bottom:1px solid #E0E0E0;overflow-x:auto;padding:0 24px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.chapter-nav::-webkit-scrollbar{height:3px}
+.chapter-nav::-webkit-scrollbar-thumb{background:#C19A6B;border-radius:3px}
+.ch-btn{padding:14px 16px;border:none;background:transparent;cursor:pointer;font-size:13px;color:#555;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-1px;font-family:'Calibri','Segoe UI',Arial,sans-serif;font-weight:500;transition:all 0.2s;flex-shrink:0}
+.ch-btn:hover{color:#024977}
+.ch-btn.active{color:#024977;border-bottom-color:#024977;font-weight:700}
+.ch-btn.done::after{content:' \2713';color:#2E8B57;font-size:11px}
+
+/* CONTENT LAYOUT */
+.content-area{max-width:820px;margin:0 auto;padding:28px 20px 60px}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;border:1px solid #E8E8E8;padding:24px;margin-bottom:20px;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+.card-title{color:#024977;font-size:20px;font-weight:700;margin-bottom:4px}
+.card-sub{color:#5b6770;font-size:13px;margin-bottom:18px}
+
+/* FACT GRID */
+.fact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.fact-card{background:#F3F4F8;border-radius:8px;padding:12px 14px;border-left:3px solid #024977}
+.fact-label{font-size:10px;text-transform:uppercase;letter-spacing:0.8px;color:#6a7682}
+.fact-value{font-size:15px;font-weight:700;color:#024977;margin-top:3px}
+
+/* PILLS */
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pill{background:#E8F1F8;color:#024977;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600}
+
+/* INFO BOX */
+.info-box{background:#F3F4F8;border-radius:8px;padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.8;color:#333}
+.info-box b{color:#024977}
+
+/* FLIP CARDS */
+.flip-hint{font-size:11px;color:#8b95a1;text-align:center;margin-bottom:8px}
+.flipcard-wrap{perspective:900px;margin-bottom:10px;cursor:pointer;user-select:none}
+.flipcard{width:100%;height:90px;position:relative;transform-style:preserve-3d;transition:transform 0.55s cubic-bezier(.4,0,.2,1),height 0.35s ease}
+.flipcard.flipped{transform:rotateY(180deg)}
+.flipcard-front,.flipcard-back{position:absolute;top:0;left:0;width:100%;min-height:90px;backface-visibility:hidden;border-radius:10px;padding:18px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:14px}
+.flipcard-front{background:#024977;color:#fff;font-weight:700;font-size:16px}
+.flipcard-back{background:#C19A6B;color:#fff;transform:rotateY(180deg);line-height:1.6;font-size:13px}
+.flip-tap{font-size:10px;opacity:0.7;margin-top:4px}
+
+/* QUIZ */
+.scenario-box{background:#F8F9FB;border:1px solid #E0E0E8;border-radius:10px;padding:18px 20px;margin-bottom:14px}
+.scenario-q{font-size:14px;color:#222;line-height:1.65;margin-bottom:14px}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt-btn{padding:11px 16px;border-radius:8px;border:1.5px solid #E0E0E0;background:#fff;text-align:left;cursor:pointer;font-size:13px;font-family:'Calibri','Segoe UI',Arial,sans-serif;color:#333;transition:all 0.2s;line-height:1.4}
+.opt-btn:hover:not([disabled]){border-color:#024977;background:#EBF3FA;color:#024977}
+.opt-btn.correct{border-color:#2E8B57!important;background:#E8F7EF!important;color:#1a6b3a!important;font-weight:700}
+.opt-btn.wrong{border-color:#C0392B!important;background:#FDECEA!important;color:#8B1A1A!important}
+.opt-btn.reveal{border-color:#2E8B57!important;background:#E8F7EF!important;color:#1a6b3a!important;opacity:0.65}
+.feedback{margin-top:12px;padding:11px 14px;border-radius:8px;font-size:13px;line-height:1.6}
+.feedback.good{background:#E8F7EF;color:#1a6b3a;border-left:4px solid #2E8B57}
+.feedback.bad{background:#FFF6E5;color:#8a5a00;border-left:4px solid #C19A6B}
+
+/* MATCH GAME */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.match-col{display:flex;flex-direction:column;gap:7px}
+.match-item{padding:10px 13px;border-radius:8px;border:1.5px solid #E0E0E0;font-size:12px;cursor:pointer;text-align:center;background:#fff;transition:all 0.2s;font-family:'Calibri','Segoe UI',Arial,sans-serif;color:#333;line-height:1.4;min-height:48px;display:flex;align-items:center;justify-content:center}
+.match-item:hover:not(.matched):not(.wrong-match){border-color:#024977;background:#EBF3FA}
+.match-item.selected{border-color:#024977;background:#EBF3FA;font-weight:700;color:#024977}
+.match-item.matched{border-color:#2E8B57!important;background:#E8F7EF!important;color:#1a6b3a!important;cursor:default;font-weight:700}
+.match-item.wrong-match{border-color:#C0392B!important;background:#FDECEA!important}
+.match-feedback{font-size:13px;color:#666;min-height:20px;margin-top:4px;font-weight:600}
+
+/* NAV BUTTONS */
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.btn-next{padding:12px 28px;background:#024977;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;font-family:'Calibri','Segoe UI',Arial,sans-serif;transition:background 0.2s}
+.btn-next:hover{background:#013a5e}
+.btn-back{padding:12px 20px;background:#fff;color:#024977;border:1.5px solid #024977;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Calibri','Segoe UI',Arial,sans-serif;transition:all 0.2s}
+.btn-back:hover{background:#EBF3FA}
+
+/* CERTIFICATE */
+.cert-wrap{background:linear-gradient(145deg,#024977 0%,#013a5e 100%);border-radius:14px;padding:32px;text-align:center;color:#fff;margin-top:16px;border:3px solid #C19A6B}
+.cert-wrap h3{font-size:22px;font-weight:700;margin-bottom:6px;letter-spacing:0.5px}
+.cert-name{font-size:26px;font-weight:700;color:#C19A6B;margin:12px 0;letter-spacing:0.5px}
+.cert-body{font-size:14px;opacity:0.85;line-height:1.7;margin-bottom:14px}
+.cert-score{background:rgba(255,255,255,0.1);display:inline-block;padding:8px 20px;border-radius:20px;margin-bottom:14px;font-size:15px;font-weight:700;color:#C19A6B}
+.cert-footer{font-size:11px;opacity:0.55;margin-top:8px}
+.cert-seals{display:flex;justify-content:center;gap:12px;margin:12px 0;flex-wrap:wrap}
+.cert-seal{background:rgba(255,255,255,0.1);padding:5px 14px;border-radius:20px;font-size:11px;opacity:0.8}
+.cert-input{width:100%;padding:12px 16px;border-radius:8px;border:1.5px solid #E0E0E0;font-size:15px;font-family:'Calibri','Segoe UI',Arial,sans-serif;margin-bottom:12px}
+.cert-input:focus{outline:none;border-color:#024977}
+.btn-cert{width:100%;padding:13px;background:#024977;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;font-family:'Calibri','Segoe UI',Arial,sans-serif}
+.btn-cert:hover{background:#013a5e}
+.btn-print{width:100%;padding:12px;margin-top:12px;background:#fff;color:#024977;border:1.5px solid #024977;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;font-family:'Calibri','Segoe UI',Arial,sans-serif}
+.btn-print:hover{background:#EBF3FA}
+.confetti-icon{font-size:52px;margin-bottom:8px}
+
+/* OVERTIME TABLE */
+.ot-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.ot-table th{background:#024977;color:#fff;padding:9px 12px;text-align:left}
+.ot-table td{padding:9px 12px;border-bottom:1px solid #F0F0F0}
+.ot-table tr:nth-child(even) td{background:#F8F9FB}
+
+/* WELCOME HERO */
+.hero{background:linear-gradient(135deg,#024977 0%,#036191 100%);border-radius:12px;padding:28px 24px;color:#fff;margin-bottom:20px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-20px;top:-20px;width:160px;height:160px;background:rgba(193,154,107,0.15);border-radius:50%}
+.hero h2{font-size:24px;font-weight:700;margin-bottom:6px}
+.hero p{font-size:14px;opacity:0.85;line-height:1.6}
+.hero .tagline{font-size:18px;font-weight:700;color:#C19A6B;margin-top:10px}
+
+/* SECTION LABEL */
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#7a838d;margin-bottom:14px;font-weight:700}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .header{padding:14px 16px}
+  .header-text h1{font-size:16px}
+  .content-area{padding:16px 12px 50px}
+  .card{padding:18px 16px}
+  .fact-grid{grid-template-columns:1fr}
+  .match-grid{grid-template-columns:1fr 1fr}
+  .match-item{font-size:11px;padding:8px}
+}
+
+/* PRINT — show only the certificate */
+@media print{
+  body{background:#fff}
+  .header,.progress-wrap,.chapter-nav,.no-print{display:none!important}
+  .content-area{padding:0;max-width:100%}
+  .card{box-shadow:none;border:none;padding:0}
+  #certOutput .cert-wrap{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="data:image/png;base64,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" alt="Blue Roots Industries">
+  <div class="header-text">
+    <h1>BRI New Employee Onboarding</h1>
+    <p>Blue Roots Industries Sdn Bhd &nbsp;|&nbsp; Together Is Better — Bersama Lebih Baik</p>
+  </div>
+  <div class="header-right">
+    <select class="lang-select" id="langSelect" onchange="setLang(this.value)" aria-label="Language / Bahasa">
+      <option value="ms">Bahasa Malaysia</option>
+      <option value="en">English</option>
+    </select>
+    <div class="score-chip" id="scoreChip">Skor: 0/0</div>
+  </div>
+</div>
+
+<div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+<div class="chapter-nav" id="chapterNav"></div>
+<div class="content-area" id="contentArea"></div>
+
+<script>
+var state = {
+  chapter: 0,
+  lang: 'ms',
+  q: {},
+  correct: 0,
+  total: 0,
+  matchDone: {},
+  matchSel: {left: null, right: null}
+};
+
+/* Pick the string for the active language; falls back to English if no Malay provided. */
+function t(en, ms) { return state.lang === 'ms' ? (ms || en) : en; }
+
+var CHAPTERS = [
+  {en: "1. Welcome",            ms: "1. Selamat Datang"},
+  {en: "2. Work Life",          ms: "2. Kehidupan Kerja"},
+  {en: "3. Leave & Benefits",   ms: "3. Cuti & Faedah"},
+  {en: "4. Conduct",            ms: "4. Tatakelakuan"},
+  {en: "5. Culture",            ms: "5. Budaya"},
+  {en: "6. Certificate",        ms: "6. Sijil"}
+];
+
+var QUIZ = {
+  0: [
+    {
+      en: "BRI was founded in which year?", ms: "BRI ditubuhkan pada tahun berapa?",
+      optsEn: ["2009", "2011", "2013", "2016"],
+      optsMs: ["2009", "2011", "2013", "2016"],
+      ans: 2,
+      fbEn: "✅ Correct! BRI was founded in 2013 and is headquartered in Klang, Selangor.",
+      fbMs: "✅ Betul! BRI ditubuhkan pada 2013 dan beribu pejabat di Klang, Selangor."
+    },
+    {
+      en: "What does BRI specialise in?", ms: "Apakah kepakaran BRI?",
+      optsEn: ["Furniture manufacturing", "Premium sustainable timber", "Steel & construction", "Palm oil"],
+      optsMs: ["Pembuatan perabot", "Kayu mampan premium", "Keluli & pembinaan", "Minyak sawit"],
+      ans: 1,
+      fbEn: "✅ Correct! BRI specialises in premium sustainable timber sourced from Brazil, USA & Canada.",
+      fbMs: "✅ Betul! BRI mengkhusus dalam kayu mampan premium dari Brazil, Amerika & Kanada."
+    }
+  ],
+  1: [
+    {
+      en: "You will arrive 30 minutes late. What should you do first?", ms: "Anda akan tiba 30 minit lewat. Apa yang perlu dilakukan dahulu?",
+      optsEn: ["Just come in and say nothing", "Notify your immediate superior immediately", "Text a colleague to cover for you", "Wait until you arrive to explain"],
+      optsMs: ["Datang sahaja tanpa berkata apa", "Beritahu penyelia anda segera", "Hantar mesej kepada rakan untuk gantikan anda", "Tunggu sehingga tiba untuk menerangkan"],
+      ans: 1,
+      fbEn: "✅ Correct! Always notify your immediate superior immediately if you will be late.",
+      fbMs: "✅ Betul! Sentiasa beritahu penyelia anda segera jika anda akan lewat."
+    },
+    {
+      en: "How many days in advance must a FWA application be submitted?", ms: "Berapa hari lebih awal permohonan FWA mesti dikemukakan?",
+      optsEn: ["7 days", "14 days", "30 days", "60 days"],
+      optsMs: ["7 hari", "14 hari", "30 hari", "60 hari"],
+      ans: 2,
+      fbEn: "✅ Correct! FWA applications must be submitted at least 30 days in advance.",
+      fbMs: "✅ Betul! Permohonan FWA mesti dikemukakan sekurang-kurangnya 30 hari lebih awal."
+    },
+    {
+      en: "What is the maximum overtime hours per month under the Employment Act?", ms: "Apakah had maksimum jam lebih masa sebulan di bawah Akta Pekerjaan?",
+      optsEn: ["80 hours", "104 hours", "120 hours", "No limit"],
+      optsMs: ["80 jam", "104 jam", "120 jam", "Tiada had"],
+      ans: 1,
+      fbEn: "✅ Correct! Maximum overtime is 104 hours per month per the Employment Act 1955.",
+      fbMs: "✅ Betul! Had lebih masa ialah 104 jam sebulan mengikut Akta Pekerjaan 1955."
+    }
+  ],
+  2: [
+    {
+      en: "How many days of annual leave are you entitled to per year?", ms: "Berapa hari cuti tahunan yang anda layak terima setahun?",
+      optsEn: ["14 days", "16 days", "18 days", "22 days"],
+      optsMs: ["14 hari", "16 hari", "18 hari", "22 hari"],
+      ans: 2,
+      fbEn: "✅ Correct! All BRI employees receive 18 days of annual leave per calendar year.",
+      fbMs: "✅ Betul! Semua pekerja BRI mendapat 18 hari cuti tahunan setahun."
+    },
+    {
+      en: "How long do you have to submit your MC after being sick?", ms: "Berapa lama masa untuk hantar MC selepas sakit?",
+      optsEn: ["24 hours", "48 hours", "72 hours", "1 week"],
+      optsMs: ["24 jam", "48 jam", "72 jam", "1 minggu"],
+      ans: 1,
+      fbEn: "✅ Correct! MC must be submitted within 48 hours of the start of sick leave.",
+      fbMs: "✅ Betul! MC mesti dikemukakan dalam masa 48 jam dari mula cuti sakit."
+    },
+    {
+      en: "From 2026, what happens to unused annual leave at year end?", ms: "Mulai 2026, apa berlaku kepada cuti tahunan yang tidak digunakan?",
+      optsEn: ["Carried forward", "Paid out as cash", "Forfeited", "Converted to sick leave"],
+      optsMs: ["Dibawa ke hadapan", "Dibayar tunai", "Hangus", "Dijadikan cuti sakit"],
+      ans: 2,
+      fbEn: "✅ Correct! From 2026, unused annual leave is forfeited at year end — plan your leave early!",
+      fbMs: "✅ Betul! Mulai 2026, cuti yang tidak digunakan akan hangus — rancang cuti anda awal!"
+    }
+  ],
+  3: [
+    {
+      en: "TRUE or FALSE: You can share confidential BRI pricing info with a friend after resigning.", ms: "BETUL atau SALAH: Anda boleh berkongsi maklumat harga sulit BRI dengan rakan selepas berhenti kerja.",
+      optsEn: ["TRUE", "FALSE"],
+      optsMs: ["BETUL", "SALAH"],
+      ans: 1,
+      fbEn: "✅ FALSE! Confidentiality obligations continue even after your employment ends.",
+      fbMs: "✅ SALAH! Kewajipan kerahsiaan berterusan walaupun selepas pekerjaan tamat."
+    },
+    {
+      en: "You must declare existing side-line work within how many days of joining BRI?", ms: "Anda mesti mengisytiharkan kerja sampingan sedia ada dalam berapa hari selepas menyertai BRI?",
+      optsEn: ["7 days", "10 days", "15 days", "30 days"],
+      optsMs: ["7 hari", "10 hari", "15 hari", "30 hari"],
+      ans: 2,
+      fbEn: "✅ Correct! New employees must declare any existing side-line work within 15 days.",
+      fbMs: "✅ Betul! Pekerja baru mesti mengisytiharkan kerja sampingan dalam 15 hari."
+    },
+    {
+      en: "TRUE or FALSE: A small gift from a supplier is fine to accept without declaring it.", ms: "BETUL atau SALAH: Hadiah kecil dari pembekal boleh diterima tanpa diisytiharkan.",
+      optsEn: ["TRUE", "FALSE"],
+      optsMs: ["BETUL", "SALAH"],
+      ans: 1,
+      fbEn: "✅ FALSE! All gifts must be declared using the Declaration of Gifts Form regardless of size.",
+      fbMs: "✅ SALAH! Semua hadiah mesti diisytiharkan menggunakan Borang Pengisytiharan Hadiah."
+    }
+  ],
+  4: [
+    {
+      en: "Your colleague does something you disagree with. What is the BRI way?", ms: "Rakan sekerja melakukan sesuatu yang anda tidak setuju. Apakah cara BRI?",
+      optsEn: ["Complain to others behind their back", "Raise it directly and constructively", "Stay silent and do nothing", "Immediately escalate to HR"],
+      optsMs: ["Mengadu kepada orang lain di belakangnya", "Bangkitkan secara langsung dan membina", "Diam dan tidak buat apa", "Terus eskalasi ke HR"],
+      ans: 1,
+      fbEn: "✅ Correct! At BRI we address issues directly — talk through problems, not around them.",
+      fbMs: "✅ Betul! Di BRI kita selesaikan isu secara langsung — bincangkan masalah, bukan elakkannya."
+    },
+    {
+      en: "You are unsure how to complete a task. What should you do?", ms: "Anda tidak pasti cara menyelesaikan tugasan. Apa yang patut dilakukan?",
+      optsEn: ["Guess and hope for the best", "Ask for help — admitting uncertainty is encouraged", "Wait until someone notices", "Say nothing and figure it out alone"],
+      optsMs: ["Teka dan harap yang terbaik", "Minta bantuan — mengakui ketidakpastian digalakkan", "Tunggu sehingga seseorang perasan", "Diam dan selesaikan sendiri"],
+      ans: 1,
+      fbEn: "✅ Correct! Saying what you don't know increases the chance that someone who does know will help.",
+      fbMs: "✅ Betul! Mengakui apa yang tidak diketahui meningkatkan peluang mendapat bantuan daripada orang yang tahu."
+    }
+  ]
+};
+
+var MATCH_PAIRS = [
+  {left: "Together Is Better",      rightEn: "Our core belief",                  rightMs: "Kepercayaan teras kami"},
+  {left: "Take the first step",     rightEn: "Don't wait for perfect conditions", rightMs: "Jangan tunggu keadaan sempurna"},
+  {left: "Say what you don't know", rightEn: "Get help faster",                   rightMs: "Dapatkan bantuan lebih cepat"},
+  {left: "Focus on what's right",   rightEn: "Not on who's right",                rightMs: "Bukan siapa yang betul"}
+];
+
+function countTotal() {
+  var n = 0;
+  for (var k in QUIZ) n += QUIZ[k].length;
+  return n;
+}
+state.total = countTotal();
+
+function setLang(lang) {
+  state.lang = lang;
+  document.getElementById('langSelect').value = lang;
+  renderNav();
+  updateScore();
+  renderContent();
+}
+
+function renderNav() {
+  var html = '';
+  for (var i = 0; i < CHAPTERS.length; i++) {
+    var cls = i === state.chapter ? 'ch-btn active' : 'ch-btn';
+    if (isDone(i) && i !== state.chapter) cls += ' done';
+    html += '<button class="' + cls + '" onclick="goChapter(' + i + ')">' + t(CHAPTERS[i].en, CHAPTERS[i].ms) + '</button>';
+  }
+  document.getElementById('chapterNav').innerHTML = html;
+}
+
+function isDone(i) {
+  if (i === 5) return false;
+  if (!QUIZ[i]) return state.chapter > i;
+  for (var j = 0; j < QUIZ[i].length; j++) {
+    var st = state.q[i + '_' + j];
+    if (!st || !st.solved) return false;
+  }
+  return true;
+}
+
+function updateProgress() {
+  var pct = ((state.chapter + 1) / CHAPTERS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function updateScore() {
+  document.getElementById('scoreChip').textContent = t('Score', 'Skor') + ': ' + state.correct + '/' + state.total;
+}
+
+function goChapter(i) {
+  state.chapter = i;
+  state.matchSel = {left: null, right: null};
+  renderNav();
+  updateProgress();
+  renderContent();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function quizHtml(chId) {
+  var qs = QUIZ[chId];
+  if (!qs) return '';
+  var html = '';
+  for (var i = 0; i < qs.length; i++) {
+    var q = qs[i];
+    var key = chId + '_' + i;
+    var st = state.q[key];
+    var opts = t(null, q.optsMs) ? (state.lang === 'ms' ? q.optsMs : q.optsEn) : q.optsEn;
+    html += '<div class="scenario-box" id="qbox_' + key + '">';
+    html += '<p class="scenario-q">' + t(q.en, q.ms) + '</p>';
+    html += '<div class="options">';
+    for (var j = 0; j < opts.length; j++) {
+      var cls = 'opt-btn';
+      var dis = '';
+      if (st) {
+        if (st.solved) {
+          dis = ' disabled';
+          if (j === q.ans) cls = 'opt-btn correct';
+          else if (st.wrong[j]) cls = 'opt-btn wrong';
+          else cls = 'opt-btn';
+        } else if (st.wrong[j]) {
+          cls = 'opt-btn wrong';
+          dis = ' disabled';
+        }
+      }
+      html += '<button class="' + cls + '"' + dis + ' onclick="answer(' + chId + ',' + i + ',' + j + ')">' + opts[j] + '</button>';
+    }
+    html += '</div>';
+    if (st && st.solved) {
+      html += '<div class="feedback good">' + t(q.fbEn, q.fbMs) + '</div>';
+    } else if (st && st.missed) {
+      html += '<div class="feedback bad">' + t('❌ Not quite — try again!', '❌ Belum tepat — cuba lagi!') + '</div>';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+function answer(chId, qi, j) {
+  var key = chId + '_' + qi;
+  var st = state.q[key] || (state.q[key] = {solved: false, missed: false, wrong: {}});
+  if (st.solved || st.wrong[j]) return;
+  if (j === QUIZ[chId][qi].ans) {
+    st.solved = true;
+    if (!st.missed) { state.correct++; updateScore(); }
+  } else {
+    st.wrong[j] = true;
+    st.missed = true;
+  }
+  renderNav();
+  renderContent();
+}
+
+function renderContent() {
+  var ch = state.chapter;
+  var fns = [chapter0, chapter1, chapter2, chapter3, chapter4, chapter5];
+  document.getElementById('contentArea').innerHTML = fns[ch]();
+  if (ch === 4) renderMatchGame();
+  initFlip();
+}
+
+function navRow(showBack, showNext, nextLabel) {
+  var html = '<div class="nav-row">';
+  if (showBack) html += '<button class="btn-back" onclick="goChapter(' + (state.chapter - 1) + ')">&#8592; ' + t('Back', 'Kembali') + '</button>';
+  else html += '<span></span>';
+  if (showNext) html += '<button class="btn-next" onclick="goChapter(' + (state.chapter + 1) + ')">' + (nextLabel || (t('Next', 'Seterusnya') + ' &#8594;')) + '</button>';
+  html += '</div>';
+  return html;
+}
+
+function fc(le, lm, ve, vm) {
+  return '<div class="fact-card"><div class="fact-label">' + t(le, lm) + '</div><div class="fact-value">' + t(ve, vm) + '</div></div>';
+}
+
+function flip(frontEn, frontMs, backEn, backMs) {
+  return '<div class="flipcard-wrap" onclick="toggleFlip(this)">' +
+    '<div class="flipcard"><div class="flipcard-front">' + t(frontEn, frontMs) + '</div>' +
+    '<div class="flipcard-back">' + t(backEn, backMs) + '</div></div></div>';
+}
+
+function chapter0() {
+  return '<div class="hero">' +
+    '<h2>' + t('Welcome to Blue Roots Industries!', 'Selamat datang ke Blue Roots Industries!') + '</h2>' +
+    '<p>' + t("Let's get you started — this takes about 15 minutes.", 'Mari kita mulakan — ini mengambil masa kira-kira 15 minit.') + '</p>' +
+    '<div class="tagline">"Together Is Better — Bersama Lebih Baik"</div>' +
+    '</div>' +
+    '<p class="section-label">' + t('Part 1 of 6 — Company Overview', 'Bahagian 1 daripada 6 — Gambaran Syarikat') + '</p>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('About BRI', 'Tentang BRI') + '</div>' +
+    '<div class="card-sub">' + t('Who are we?', 'Siapa kami?') + '</div>' +
+    '<div class="fact-grid">' +
+    fc('Founded', 'Ditubuhkan', '2013') +
+    fc('HQ', 'Ibu Pejabat', 'Klang, Selangor') +
+    fc('Speciality', 'Kepakaran', 'Premium Sustainable Timber', 'Kayu Mampan Premium') +
+    fc('Markets', 'Pasaran', 'Europe & North America') +
+    fc('Timber Sources', 'Sumber Kayu', 'Brazil, USA & Canada', 'Brazil, Amerika & Kanada') +
+    fc('Reg. No.', 'No. Pendaftaran', '1177774-T') +
+    '</div>' +
+    '<div class="info-box"><b>' + t('What we do:', 'Apa yang kami lakukan:') + '</b><br>' +
+    t('We supply rough timber, semi-finished products, and finished components including windows, doors, decking and cladding. Every product is inspected for structural integrity, dimensional accuracy and a flawless finish.',
+      'Kami membekal kayu kasar, produk separa siap, dan komponen siap termasuk tingkap, pintu, decking dan cladding. Setiap produk diperiksa untuk integriti struktur, ketepatan dimensi dan kemasan sempurna.') +
+    '</div>' +
+    '<div class="card-sub" style="margin-top:12px;margin-bottom:6px">' + t('Our Certifications:', 'Pensijilan Kami:') + '</div>' +
+    '<div class="pills"><span class="pill">KOMO (Netherlands)</span><span class="pill">FCBA (France)</span><span class="pill">FSC Membership</span><span class="pill">PEFC Membership</span><span class="pill">BlueTec® Label</span></div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Vision & Mission', 'Visi & Misi') + '</div>' +
+    '<div class="card-sub">' + t('Click each card to reveal!', 'Klik setiap kad untuk lihat!') + '</div>' +
+    '<p class="flip-hint">&#128161; ' + t('Click to flip', 'Klik untuk balik') + '</p>' +
+    flip('VISION', 'VISI',
+      'To be the preferred partner for all stakeholders in the sustainable timber industry.',
+      'Menjadi rakan kongsi pilihan bagi semua pihak berkepentingan dalam industri kayu mampan.') +
+    flip('MISSION', 'MISI',
+      'To deliver premium sustainable timber through uncompromising quality, responsible sourcing, and long-term partnerships.',
+      'Menyampaikan kayu mampan premium melalui kualiti tanpa kompromi, perolehan bertanggungjawab, dan perkongsian jangka panjang.') +
+    flip('OUR ASPIRATION', 'ASPIRASI KAMI',
+      'To be a learning organisation that grows its people, processes and partnerships. To build a strong backbone for our sales organisation to serve global customers with excellence.',
+      'Menjadi organisasi pembelajaran yang mengembangkan manusia, proses dan perkongsian. Membina tulang belakang kukuh untuk organisasi jualan kami.') +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Quick Quiz!', 'Kuiz Cepat!') + '</div>' +
+    '<div class="card-sub">' + t('Test what you just learned', 'Uji apa yang baru dipelajari') + '</div>' +
+    quizHtml(0) +
+    '</div>' +
+    navRow(false, true);
+}
+
+function chapter1() {
+  return '<p class="section-label">' + t('Part 2 of 6 — Work Arrangements', 'Bahagian 2 daripada 6 — Pengaturan Kerja') + '</p>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Work Hours', 'Waktu Kerja') + '</div>' +
+    '<div class="card-sub">' + t('Your schedule at BRI', 'Jadual kerja anda di BRI') + '</div>' +
+    '<div class="fact-grid">' +
+    fc('Office', 'Pejabat', 'Mon–Fri 9am–6pm') +
+    fc('Shift Work', 'Kerja Syif', 'Mon–Sat 7.5h/day') +
+    fc('Core Meeting Hours', 'Waktu Mesyuarat Teras', '9:30am – 4:30pm') +
+    fc('Probation', 'Percubaan', '3 months', '3 bulan') +
+    fc('Probation Reviews', 'Penilaian Percubaan', 'Every 30 days', 'Setiap 30 hari') +
+    fc('Max Daily Hours', 'Jam Harian Maksimum', '12 hours incl. OT', '12 jam termasuk OT') +
+    '</div>' +
+    '<div class="info-box"><b>' + t('Flexible Work Hours (FWA) Options:', 'Pilihan Waktu Kerja Fleksibel (FWA):') + '</b><br>' +
+    'Option 1: 7:30am – 4:30pm &nbsp;|&nbsp; Option 2: 8:00am – 5:00pm<br>' +
+    'Option 3: 8:30am – 5:30pm &nbsp;|&nbsp; Option 4: 9:00am – 6:00pm<br>' +
+    'Option 5: 9:30am – 6:30pm &nbsp;|&nbsp; Option 6: 10:00am – 7:30pm<br><br>' +
+    '<b>' + t('FWA Eligibility:', 'Kelayakan FWA:') + '</b> ' +
+    t('Min. 12 months satisfactory record, no disciplinary issues, not applicable for yard/production/security/front-office roles. Must apply 30 days in advance. Company responds within 60 days.',
+      'Minimum 12 bulan rekod memuaskan, tiada masalah disiplin, tidak terpakai untuk peranan yard/pengeluaran/keselamatan/front-office. Mesti memohon 30 hari lebih awal. Syarikat membalas dalam 60 hari.') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Overtime Rates', 'Kadar Lebih Masa') + '</div>' +
+    '<div class="card-sub">' + t("Know what you're entitled to", 'Ketahui kelayakan anda') + '</div>' +
+    '<table class="ot-table"><thead><tr><th>' + t('Day Type', 'Jenis Hari') + '</th><th>' + t('Rate', 'Kadar') + '</th></tr></thead><tbody>' +
+    '<tr><td>' + t('Normal working day (after hours)', 'Hari kerja biasa (selepas waktu)') + '</td><td><b>1.5x</b> ' + t('hourly rate', 'kadar sejam') + '</td></tr>' +
+    '<tr><td>' + t('Off day (first 8 hours)', 'Hari cuti (8 jam pertama)') + '</td><td><b>1.5x</b> ' + t('hourly rate', 'kadar sejam') + '</td></tr>' +
+    '<tr><td>' + t('Rest day (all hours)', 'Hari rehat (semua jam)') + '</td><td><b>2.0x</b> ' + t('hourly rate', 'kadar sejam') + '</td></tr>' +
+    '<tr><td>' + t('Public holiday (first 8 hours)', 'Cuti umum (8 jam pertama)') + '</td><td><b>2.0x</b> ' + t('hourly rate', 'kadar sejam') + '</td></tr>' +
+    '<tr><td>' + t('Public holiday (subsequent hours)', 'Cuti umum (jam berikutnya)') + '</td><td><b>3.0x</b> ' + t('hourly rate', 'kadar sejam') + '</td></tr>' +
+    '</tbody></table>' +
+    '<div class="info-box" style="margin-top:12px"><b>' + t('Important:', 'Penting:') + '</b> ' +
+    t('All overtime must be pre-approved. Max 104 hours/month. Minimum 1-hour block. Overtime applies to employees earning ≤RM4,000/month or in manual labour roles.',
+      'Semua lebih masa perlu kelulusan awal. Had 104 jam/bulan. Minimum 1 jam setiap blok. Lebih masa terpakai untuk pekerja berpendapatan ≤RM4,000/bulan atau dalam peranan buruh.') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Scenario Quiz!', 'Kuiz Senario!') + '</div>' +
+    '<div class="card-sub">' + t('How would you handle these?', 'Bagaimana anda menangani ini?') + '</div>' +
+    quizHtml(1) +
+    '</div>' +
+    navRow(true, true);
+}
+
+function chapter2() {
+  return '<p class="section-label">' + t('Part 3 of 6 — Leave & Benefits', 'Bahagian 3 daripada 6 — Cuti & Faedah') + '</p>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Your Leave Entitlements', 'Kelayakan Cuti Anda') + '</div>' +
+    '<div class="card-sub">' + t('Know your rights!', 'Ketahui hak anda!') + '</div>' +
+    '<div class="fact-grid">' +
+    fc('Annual Leave', 'Cuti Tahunan', '18 days/year', '18 hari/tahun') +
+    fc('Public Holidays', 'Cuti Umum', '18 days/year', '18 hari/tahun') +
+    fc('Sick Leave (< 2 yrs)', 'Cuti Sakit (< 2 thn)', '14 days/year', '14 hari/tahun') +
+    fc('Sick Leave (2–5 yrs)', 'Cuti Sakit (2–5 thn)', '18 days/year', '18 hari/tahun') +
+    fc('Sick Leave (5+ yrs)', 'Cuti Sakit (5+ thn)', '22 days/year', '22 hari/tahun') +
+    fc('Hospitalisation', 'Kemasukan Hospital', '60 days/year', '60 hari/tahun') +
+    fc('Maternity', 'Bersalin', '98 days (up to 5 children)', '98 hari (sehingga 5 anak)') +
+    fc('Paternity', 'Bapa', '7 days (up to 5 times)', '7 hari (sehingga 5 kali)') +
+    fc('Compassionate', 'Kematian', '3 days/year', '3 hari/tahun') +
+    fc('Marriage', 'Perkahwinan', '3 days (1st marriage)', '3 hari (perkahwinan pertama)') +
+    fc('Study/Exam Leave', 'Cuti Belajar/Peperiksaan', '2 days/year (max 4 yrs)', '2 hari/tahun (maks 4 thn)') +
+    fc('Emergency Leave', 'Cuti Kecemasan', 'From annual leave', 'Daripada cuti tahunan') +
+    '</div>' +
+    '<div class="info-box"><b>' + t('Key Rules:', 'Peraturan Penting:') + '</b><br>' +
+    t('• Annual leave cannot be carried forward from 2026 — use it or lose it!<br>• MC must be submitted within 48 hours<br>• Annual leave can only be taken after probation confirmation<br>• Absent without leave on the day before/after a public holiday = forfeit that holiday pay',
+      '• Cuti tahunan tidak boleh dibawa ke hadapan mulai 2026 — guna atau hilang!<br>• MC mesti dikemukakan dalam 48 jam<br>• Cuti tahunan hanya boleh diambil selepas pengesahan percubaan<br>• Tidak hadir sebelum/selepas cuti umum = hilang elaun cuti tersebut') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Payroll & Benefits', 'Gaji & Faedah') + '</div>' +
+    '<div class="card-sub">' + t('What you need to know', 'Apa yang perlu anda tahu') + '</div>' +
+    '<div class="info-box"><b>' + t('Statutory Contributions:', 'Caruman Berkanun:') + '</b><br>' +
+    '• EPF (KWSP) — Employees Provident Fund<br>' +
+    '• SOCSO (PERKESO) — Social security contributions<br>' +
+    '• EIS — Employment Insurance System<br>' +
+    '• HRDC levy — Funded training programmes<br><br>' +
+    '<b>' + t('Claims:', 'Tuntutan:') + '</b> ' +
+    t('Business claims must be submitted with supporting receipts. Petrol & toll claims require the company claim form and superior approval.',
+      'Tuntutan perniagaan mesti dikemukakan dengan resit sokongan. Tuntutan petrol & tol memerlukan borang tuntutan syarikat dan kelulusan penyelia.') + '<br><br>' +
+    '<b>' + t('Notice Period:', 'Tempoh Notis Berhenti:') + '</b><br>' +
+    t('< 2 years: 4 weeks &nbsp;|&nbsp; 2–5 years: 6 weeks &nbsp;|&nbsp; 5+ years: 8 weeks',
+      '< 2 tahun: 4 minggu &nbsp;|&nbsp; 2–5 tahun: 6 minggu &nbsp;|&nbsp; 5+ tahun: 8 minggu') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Leave Quiz!', 'Kuiz Cuti!') + '</div>' +
+    '<div class="card-sub">' + t('How well do you know your leave?', 'Seberapa baik anda tahu cuti anda?') + '</div>' +
+    quizHtml(2) +
+    '</div>' +
+    navRow(true, true);
+}
+
+function chapter3() {
+  return '<p class="section-label">' + t('Part 4 of 6 — Conduct & Compliance', 'Bahagian 4 daripada 6 — Tatakelakuan & Pematuhan') + '</p>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Code of Conduct', 'Kod Tatakelakuan') + '</div>' +
+    '<div class="card-sub">' + t('Click each card to learn more!', 'Klik setiap kad untuk tahu lebih lanjut!') + '</div>' +
+    '<p class="flip-hint">&#128161; ' + t('Click to flip', 'Klik untuk balik') + '</p>' +
+    flip('Anti-Bribery & Corruption (ABAC)', 'Anti-Rasuah & Korupsi (ABAC)',
+      '<b>Zero tolerance policy.</b> Under Section 17A MACC 2018, penalties are up to 10x the bribe or RM1 million + 20 years jail. Declare all gifts using the Declaration of Gifts Form. Report any suspected corruption immediately to HR or CEO/MD.',
+      '<b>Dasar sifar toleransi.</b> Di bawah Seksyen 17A SPRM 2018, penalti sehingga 10x nilai rasuah atau RM1 juta + 20 tahun penjara. Isytihar semua hadiah menggunakan Borang Pengisytiharan Hadiah. Laporkan sebarang syak rasuah segera kepada HR atau CEO/MD.') +
+    flip('Conflict of Interest', 'Konflik Kepentingan',
+      'Declare existing side-line work within 15 days of joining. Must get written no-objection consent before starting any new side business. Side work must not use company resources, be done during work hours, or conflict with BRI\'s business.',
+      'Isytihar kerja sampingan sedia ada dalam 15 hari menyertai. Mesti dapat kebenaran bertulis sebelum memulakan perniagaan sampingan baru. Kerja sampingan tidak boleh guna sumber syarikat, dibuat semasa waktu kerja, atau bercanggah dengan perniagaan BRI.') +
+    flip('Confidentiality', 'Kerahsiaan',
+      'Never share confidential company information — pricing, strategies, customer data, personnel matters — with unauthorised parties. This obligation continues even AFTER you leave BRI.',
+      'Jangan kongsi maklumat sulit syarikat — harga, strategi, data pelanggan, hal kakitangan — dengan pihak tidak diberi kebenaran. Kewajipan ini berterusan walaupun SELEPAS anda berhenti dari BRI.') +
+    flip('Workplace Respect', 'Hormat Tempat Kerja',
+      'BRI has zero tolerance for discrimination, harassment or bullying. Every employee is treated consistently regardless of race, religion, gender, age or nationality. Sexual harassment of any form is strictly prohibited.',
+      'BRI tidak bertolak ansur dengan diskriminasi, gangguan atau buli. Setiap pekerja dilayan secara adil tanpa mengira bangsa, agama, jantina, umur atau kewarganegaraan. Gangguan seksual dalam apa jua bentuk dilarang sama sekali.') +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Grounds for Summary Dismissal', 'Alasan Pembuangan Serta-Merta') + '</div>' +
+    '<div class="card-sub">' + t('These are serious', 'Ini adalah perkara serius') + '</div>' +
+    '<div class="info-box">' +
+    t('🚫 Theft, fraud or dishonesty<br>🚫 Physical assault or threats of violence<br>🚫 Wilful damage to company property<br>🚫 Alcohol or drugs at the workplace<br>🚫 Serious breach of confidentiality<br>🚫 Bribery or corruption<br>🚫 Serious insubordination',
+      '🚫 Kecurian, penipuan atau ketidakjujuran<br>🚫 Serangan fizikal atau ugutan keganasan<br>🚫 Kerosakan sengaja harta syarikat<br>🚫 Alkohol atau dadah di tempat kerja<br>🚫 Pelanggaran serius kerahsiaan<br>🚫 Rasuah atau korupsi<br>🚫 Ketidakpatuhan serius') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Conduct Quiz!', 'Kuiz Tatakelakuan!') + '</div>' +
+    '<div class="card-sub">' + t('True or false?', 'Betul atau salah?') + '</div>' +
+    quizHtml(3) +
+    '</div>' +
+    navRow(true, true);
+}
+
+function chapter4() {
+  return '<p class="section-label">' + t('Part 5 of 6 — Our Culture', 'Bahagian 5 daripada 6 — Budaya Kami') + '</p>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Together Is Better', 'Bersama Lebih Baik') + '</div>' +
+    '<div class="card-sub">' + t('This is who we are', 'Inilah siapa kami') + '</div>' +
+    '<div style="background:#024977;border-radius:10px;padding:20px;color:#fff;text-align:center;margin-bottom:14px">' +
+    '<div style="font-size:22px;font-weight:700;margin-bottom:6px">' + t('"Together Is Better"', '"Bersama Lebih Baik"') + '</div>' +
+    '<div style="font-size:15px;opacity:0.8;font-style:italic">' + t('"Bersama Lebih Baik"', '"Together Is Better"') + '</div>' +
+    '</div>' +
+    '<div class="info-box">' +
+    t('We are not here to find the perfect company. <b>We are here to build the perfect company — for each other.</b>',
+      'Kami bukan di sini untuk mencari syarikat yang sempurna. <b>Kami di sini untuk membina syarikat yang sempurna — untuk satu sama lain.</b>') + '<br><br>' +
+    t('🌱 <b>Take the first step</b> — we don\'t wait for perfect conditions. We try, learn, and try again.<br>💬 <b>Say what you don\'t know</b> — admitting uncertainty gets you help faster.<br>🤝 <b>Focus on what\'s right</b>, not who\'s right. Disagreement is healthy when it\'s about the answer.<br>🏆 <b>Celebrate effort AND outcomes</b> — the journey matters as much as the result.',
+      '🌱 <b>Ambil langkah pertama</b> — kita tidak tunggu keadaan sempurna. Kita cuba, belajar, dan cuba lagi.<br>💬 <b>Katakan apa yang anda tidak tahu</b> — mengakui ketidakpastian mempercepat bantuan.<br>🤝 <b>Fokus pada apa yang betul</b>, bukan siapa yang betul. Perbezaan pendapat itu sihat apabila ia tentang jawapan.<br>🏆 <b>Raikan usaha DAN hasil</b> — perjalanan sama pentingnya dengan keputusan.') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('How We Lead', 'Cara Kami Memimpin') + '</div>' +
+    '<div class="card-sub">' + t('Leadership is a practice, not a title', 'Kepimpinan adalah amalan, bukan gelaran') + '</div>' +
+    '<div class="info-box">' +
+    t('Good leaders at BRI are <b>not concerned with who is right — they are concerned with what is right.</b><br><br>Leaders at BRI: Plan. Organise. Communicate. Control. These four responsibilities give the people around them clarity and confidence.',
+      'Pemimpin yang baik di BRI <b>bukan bimbangkan siapa yang betul — mereka bimbangkan apa yang betul.</b><br><br>Pemimpin di BRI: Rancang. Susun. Komunikasi. Kawal. Empat tanggungjawab ini memberi kejelasan dan keyakinan kepada pasukan.') +
+    '</div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Match the Values!', 'Padankan Nilai-Nilai!') + '</div>' +
+    '<div class="card-sub">' + t('Click a value on the left, then its meaning on the right', 'Klik nilai di kiri, kemudian maknanya di kanan') + '</div>' +
+    '<div id="matchGame"></div>' +
+    '</div>' +
+    '<div class="card">' +
+    '<div class="card-title">' + t('Culture Quiz!', 'Kuiz Budaya!') + '</div>' +
+    '<div class="card-sub">' + t('How would a BRI person handle this?', 'Bagaimana pekerja BRI menangani ini?') + '</div>' +
+    quizHtml(4) +
+    '</div>' +
+    navRow(true, true, t('Get My Certificate!', 'Dapatkan Sijil!') + ' &#8594;');
+}
+
+function chapter5() {
+  var pct = Math.round((state.correct / state.total) * 100);
+  return '<p class="section-label">' + t('Part 6 of 6 — Completion', 'Bahagian 6 daripada 6 — Tamat') + '</p>' +
+    '<div class="card" style="text-align:center">' +
+    '<div class="confetti-icon">&#127881;</div>' +
+    '<div class="card-title" style="text-align:center">' + t('Congratulations!', 'Tahniah!') + '</div>' +
+    '<p style="color:#555;font-size:14px;margin:8px 0 20px">' +
+    t('You have completed the BRI New Employee Onboarding!', 'Anda telah menyelesaikan Orientasi Pekerja Baru BRI!') + '</p>' +
+    '<div style="background:#F3F4F8;border-radius:10px;padding:16px;margin-bottom:20px;font-size:14px">' +
+    '<b style="color:#024977">' + t('Your Quiz Score:', 'Skor Kuiz Anda:') + '</b><br>' +
+    '<span style="font-size:32px;font-weight:700;color:#024977">' + state.correct + ' / ' + state.total + '</span><br>' +
+    '<span style="color:#666;font-size:13px">' + pct + '% ' + t('correct', 'betul') + '</span>' +
+    '</div>' +
+    '<input type="text" class="cert-input" id="certNameInput" placeholder="' + t('Enter your full name', 'Masukkan nama penuh anda') + '">' +
+    '<button class="btn-cert" onclick="generateCert()">' + t('Generate My Certificate', 'Jana Sijil Saya') + '</button>' +
+    '</div>' +
+    '<div id="certOutput"></div>' +
+    navRow(true, false);
+}
+
+function generateCert() {
+  var name = document.getElementById('certNameInput').value.trim();
+  if (!name) { alert(t('Please enter your name first!', 'Sila masukkan nama anda dahulu!')); return; }
+  var pct = Math.round((state.correct / state.total) * 100);
+  var today = new Date().toLocaleDateString(state.lang === 'ms' ? 'ms-MY' : 'en-MY', {year: 'numeric', month: 'long', day: 'numeric'});
+  var grade = pct >= 80 ? t('Excellent', 'Cemerlang') : pct >= 60 ? t('Good', 'Baik') : t('Completed', 'Selesai');
+  document.getElementById('certOutput').innerHTML =
+    '<div class="cert-wrap">' +
+    '<p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.6;margin-bottom:8px">BLUE ROOTS INDUSTRIES SDN BHD (1177774-T)</p>' +
+    '<h3>' + t('Certificate of Completion', 'Sijil Penyiapan') + '</h3>' +
+    '<p style="opacity:0.7;font-size:13px;margin-top:10px">' + t('This is to certify that', 'Ini mengesahkan bahawa') + '</p>' +
+    '<div class="cert-name">' + name + '</div>' +
+    '<p class="cert-body">' +
+    t('has successfully completed the BRI New Employee Onboarding Programme and demonstrated understanding of company policies, culture and values.',
+      'telah berjaya menyelesaikan Program Orientasi Pekerja Baru BRI dan menunjukkan pemahaman tentang dasar, budaya dan nilai syarikat.') + '</p>' +
+    '<div class="cert-score">' + t('Quiz Score', 'Skor Kuiz') + ': ' + state.correct + '/' + state.total + ' (' + pct + '%) — ' + grade + '</div>' +
+    '<div class="cert-seals"><span class="cert-seal">Together Is Better</span><span class="cert-seal">Bersama Lebih Baik</span><span class="cert-seal">Version 1.0 | 2026</span></div>' +
+    '<p class="cert-footer">Blue Roots Industries Sdn Bhd &nbsp;|&nbsp; Klang, Selangor, Malaysia<br>' + today + '</p>' +
+    '</div>' +
+    '<button class="btn-print no-print" onclick="window.print()">&#128424; ' + t('Print / Save as PDF', 'Cetak / Simpan sebagai PDF') + '</button>';
+  document.getElementById('certOutput').scrollIntoView({behavior: 'smooth'});
+}
+
+var matchShuffle = [];
+var matchRightShuffle = [];
+
+function renderMatchGame() {
+  var el = document.getElementById('matchGame');
+  if (!el) return;
+  if (matchShuffle.length === 0) {
+    matchShuffle = MATCH_PAIRS.map(function(p, i) { return {id: i}; });
+    matchRightShuffle = MATCH_PAIRS.map(function(p, i) { return {id: i}; });
+    matchShuffle.sort(function() { return Math.random() - 0.5; });
+    matchRightShuffle.sort(function() { return Math.random() - 0.5; });
+  }
+  var leftHtml = matchShuffle.map(function(p) {
+    var cls = 'match-item' + (state.matchDone[p.id] ? ' matched' : '') + (state.matchSel.left === p.id ? ' selected' : '');
+    return '<div class="' + cls + '" id="ml_' + p.id + '" onclick="selectMatch(\'left\',' + p.id + ')">' + MATCH_PAIRS[p.id].left + '</div>';
+  }).join('');
+  var rightHtml = matchRightShuffle.map(function(p) {
+    var cls = 'match-item' + (state.matchDone[p.id] ? ' matched' : '') + (state.matchSel.right === p.id ? ' selected' : '');
+    return '<div class="' + cls + '" id="mr_' + p.id + '" onclick="selectMatch(\'right\',' + p.id + ')">' + t(MATCH_PAIRS[p.id].rightEn, MATCH_PAIRS[p.id].rightMs) + '</div>';
+  }).join('');
+  el.innerHTML = '<div class="match-grid"><div class="match-col">' + leftHtml + '</div><div class="match-col">' + rightHtml + '</div></div><div class="match-feedback" id="matchFb"></div>';
+}
+
+function selectMatch(side, id) {
+  if (state.matchDone[id]) return;
+  state.matchSel[side] = id;
+  document.querySelectorAll('.match-item').forEach(function(el) {
+    if (!el.classList.contains('matched')) el.classList.remove('selected');
+  });
+  var el = document.getElementById((side === 'left' ? 'ml_' : 'mr_') + id);
+  if (el) el.classList.add('selected');
+  if (state.matchSel.left !== null && state.matchSel.right !== null) {
+    var fb = document.getElementById('matchFb');
+    if (state.matchSel.left === state.matchSel.right) {
+      state.matchDone[state.matchSel.left] = true;
+      ['ml_', 'mr_'].forEach(function(p) {
+        var e = document.getElementById(p + state.matchSel.left);
+        if (e) { e.classList.remove('selected'); e.classList.add('matched'); }
+      });
+      var allDone = Object.keys(state.matchDone).length === MATCH_PAIRS.length;
+      if (fb) fb.innerHTML = allDone
+        ? '<span style="color:#024977;font-weight:700">&#127881; ' + t('All matched! Great job!', 'Semua dipadan! Bagus!') + '</span>'
+        : '<span style="color:#2E8B57">&#10003; ' + t('Match! Keep going!', 'Padan! Teruskan!') + '</span>';
+    } else {
+      ['ml_' + state.matchSel.left, 'mr_' + state.matchSel.right].forEach(function(id2) {
+        var e = document.getElementById(id2);
+        if (e) {
+          e.classList.add('wrong-match');
+          setTimeout(function() { e.classList.remove('wrong-match', 'selected'); }, 700);
+        }
+      });
+      if (fb) fb.innerHTML = '<span style="color:#C0392B">&#10005; ' + t('Try again!', 'Cuba lagi!') + '</span>';
+    }
+    state.matchSel = {left: null, right: null};
+  }
+}
+
+/* Flip cards: size each card to its currently visible face so long text never overflows. */
+function initFlip() {
+  document.querySelectorAll('.flipcard').forEach(function(fc) {
+    var front = fc.querySelector('.flipcard-front');
+    if (front) fc.style.height = front.offsetHeight + 'px';
+  });
+}
+
+function toggleFlip(wrap) {
+  var fc = wrap.querySelector('.flipcard');
+  var flipped = fc.classList.toggle('flipped');
+  var face = fc.querySelector(flipped ? '.flipcard-back' : '.flipcard-front');
+  if (face) fc.style.height = face.offsetHeight + 'px';
+}
+
+document.getElementById('langSelect').value = state.lang;
+renderNav();
+renderContent();
+updateScore();
+</script>
+</body>
+</html>
